@@ -29,6 +29,10 @@ go.work.sum
 # env file
 .env
 
+# Local EPUB books and generated docs (keep local only)
+*.epub
+
 # Editor/IDE
 # .idea/
 # .vscode/
+.DS_Store
