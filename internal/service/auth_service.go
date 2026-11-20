@@ -16,21 +16,27 @@ type UserRepository interface {
 }
 
 type AuthService struct {
-	users  UserRepository
-	hasher *security.PasswordHasher
-	logger *slog.Logger
+	users      UserRepository
+	hasher     *security.PasswordHasher
+	jwtManager *security.JWTManager
+	logger     *slog.Logger
 }
 
 func NewAuthService(
 	users UserRepository,
 	hasher *security.PasswordHasher,
+	jwtManager *security.JWTManager,
 	logger *slog.Logger,
 ) *AuthService {
 	return &AuthService{
-		users:  users,
-		hasher: hasher,
-		logger: logger,
+		users:      users,
+		hasher:     hasher,
+		jwtManager: jwtManager,
+		logger:     logger,
 	}
+}
+func (s *AuthService) JWKS() []byte {
+	return s.jwtManager.JWKSBytes()
 }
 
 func (s *AuthService) Register(ctx context.Context, email, password string) (*domain.User, error) {

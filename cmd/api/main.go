@@ -91,8 +91,20 @@ func main() {
 		os.Exit(1)
 	}
 
+	jwtManager, err := security.NewJWTManager(
+		cfg.PrivateKey,
+		cfg.PublicKey,
+		cfg.Ed25519KeyID,
+		cfg.JWTIssuer,
+		cfg.AccessTokenTTL,
+	)
+	if err != nil {
+		logger.Error("failed to initialize Ed25519 JWT manager", "err", err)
+		os.Exit(1)
+	}
+
 	userRepo := postgres.NewUserRepository(pgPool)
-	authService := service.NewAuthService(userRepo, hasher, logger)
+	authService := service.NewAuthService(userRepo, hasher, jwtManager, logger)
 
 	pinger := &infraPinger{pgPool: pgPool, redisClient: redisClient}
 	handler := httpapi.NewHandler(authService, pinger, logger)

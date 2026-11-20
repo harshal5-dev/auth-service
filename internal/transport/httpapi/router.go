@@ -13,6 +13,8 @@ func NewRouter(h *Handler, logger *slog.Logger) http.Handler {
 
 	mux.HandleFunc("POST /api/v1/auth/register", h.HandleRegister)
 
+	mux.HandleFunc("GET /.well-known/jwks.json", h.HandleJWKS)
+
 	var handler http.Handler = mux
 	handler = RecoveryMiddleware(logger, handler)
 	handler = LoggingMiddleware(logger, handler)

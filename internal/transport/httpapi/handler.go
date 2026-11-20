@@ -86,6 +86,13 @@ func (h *Handler) HandleReadyz(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func (h *Handler) HandleJWKS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/jsonl charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(h.authService.JWKS())
+}
+
 func toUserDTO(u *domain.User) UserDTO {
 	return UserDTO{
 		ID:        u.ID,
